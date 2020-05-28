@@ -1,0 +1,32 @@
+---
+
+# enabled
+prerequisite_enabled: yes
+
+# mode/owner/group/backup defaults
+prerequisite_file_mode: "0444"
+prerequisite_dir_mode: "0555"
+prerequisite_owner: "root"
+prerequisite_group: "root"
+prerequisite_backup: true
+
+# skip
+prerequisite_skip:
+  - "localhost"
+
+# hosts file
+prerequisite_hosts_enabled: yes
+prerequisite_hosts_file: "/etc/hosts"
+
+prerequisite_hosts_dns_servers: [ 8.8.8.8 ]
+#prerequisite_hosts_ipv4_address: 
+#prerequisite_hosts_ipv6_address: 
+
+# wait for
+prerequisite_wait_enabled: yes
+
+# info/facts
+prerequisite_info_enabled: yes
+
+# vim: set syn=yaml sw=2 ts=2 et colorcolumn=160 :
+# eof

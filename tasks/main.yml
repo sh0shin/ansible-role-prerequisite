@@ -1,0 +1,113 @@
+---
+
+- name: settings
+  set_fact:
+    _dns_servers: "@{{ prerequisite_hosts_dns_servers | join(',') }}"
+    _dns_qhost: "{{ inventory_hostname }}."
+  tags: [ always ]
+
+# hosts file
+- name: add inventory host to hosts file (ipv4)
+  lineinfile:
+    dest: '{{ prerequisite_hosts_file }}'
+    regexp: "^[0-9.]+ {{ inventory_hostname }}"
+    line: "{{ prerequisite_hosts_ipv4_address }} {{ inventory_hostname }}"
+    state: present
+  delegate_to: localhost
+  become: yes
+  when: prerequisite_enabled
+        and prerequisite_hosts_enabled
+        and inventory_hostname not in prerequisite_skip
+        and prerequisite_hosts_ipv4_address is defined
+        and prerequisite_hosts_ipv4_address
+        and lookup('dig', _dns_qhost, 'qtype=A', _dns_servers) == 'NXDOMAIN'
+  tags: [ always, hosts ]
+
+- name: remove inventory host from hosts file (ipv4)
+  lineinfile:
+    dest: '{{ prerequisite_hosts_file }}'
+    regexp: "^[0-9.]+ {{ inventory_hostname }}"
+    line: "{{ prerequisite_hosts_ipv4_address }} {{ inventory_hostname }}"
+    state: absent
+  delegate_to: localhost
+  become: yes
+  when: prerequisite_enabled
+        and prerequisite_hosts_enabled
+        and inventory_hostname not in prerequisite_skip
+        and prerequisite_hosts_ipv4_address is defined
+        and prerequisite_hosts_ipv4_address
+        and lookup('dig', _dns_qhost, 'qtype=A', _dns_servers) != 'NXDOMAIN'
+  tags: [ always, hosts ]
+
+- name: add inventory host to hosts files (ipv6)
+  lineinfile:
+    dest: '{{ prerequisite_hosts_file }}'
+    regexp: "^[0-9a-f:]+ {{ inventory_hostname }}"
+    line: "{{ prerequisite_hosts_ipv6_address }} {{ inventory_hostname }}"
+    state: present
+  delegate_to: localhost
+  become: yes
+  when: prerequisite_enabled
+        and prerequisite_hosts_enabled
+        and inventory_hostname not in prerequisite_skip
+        and prerequisite_hosts_ipv6_address is defined
+        and prerequisite_hosts_ipv6_address
+        and lookup('dig', _dns_qhost, 'qtype=AAAA', _dns_servers) == 'NXDOMAIN'
+  tags: [ always, hosts ]
+
+- name: remove inventory host from hosts files (ipv6)
+  lineinfile:
+    dest: '{{ prerequisite_hosts_file }}'
+    regexp: "^[0-9a-f:]+ {{ inventory_hostname }}"
+    line: "{{ prerequisite_hosts_ipv6_address }} {{ inventory_hostname }}"
+    state: absent
+  delegate_to: localhost
+  become: yes
+  when: prerequisite_enabled
+        and prerequisite_hosts_enabled
+        and inventory_hostname not in prerequisite_skip
+        and prerequisite_hosts_ipv6_address is defined
+        and prerequisite_hosts_ipv6_address
+        and lookup('dig', _dns_qhost, 'qtype=AAAA', _dns_servers) != 'NXDOMAIN'
+  tags: [ always, hosts ]
+
+#- name: add host to dhcp
+#  omapi_host:
+#    key_name: '{{ prerequisite_dhcp_key_name }}'
+#    key: '{{ prerequisite_dhcp_key_data }}'
+#    host: '{{ prerequisite_dhcp_host }}'
+#    #
+#    macaddr: '{{ base_mac_address }}'
+#    hostname: '{{ inventory_hostname_short }}' # short!
+#    ip: '{{ base_ipv4_address }}'
+#    ddns: yes
+#    #statements:
+#    #  - filename "pxelinux.0"
+#    #  - next-server 1.1.1.1
+#    state: present
+#  ignore_errors: yes
+#  delegate_to: localhost
+#  when: base_mac_address is defined
+#        and base_ipv4_address is defined
+#  tags: [ always, dhcp ]
+
+# wait
+- name: wait for connection
+  wait_for_connection:
+  when: prerequisite_enabled
+        and prerequisite_wait_enabled
+        and inventory_hostname not in prerequisite_skip
+  tags: [ always ]
+
+# facts/info
+- name: get latest facts/infos
+  setup:
+  ignore_unreachable: yes
+  ignore_errors: yes
+  when: prerequisite_enabled
+        and prerequisite_info_enabled
+        and inventory_hostname not in prerequisite_skip
+  tags: [ always ]
+
+# vim: set syn=yaml sw=2 ts=2 et colorcolumn=160 :
+# eof
