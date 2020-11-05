@@ -12,10 +12,7 @@ galaxy_info:
   #min_ansible_container_version:
 
   # https://galaxy.ansible.com/api/v1/platforms/
-  platforms:
-    - name: all
-      versions:
-        - all
+  platforms: []
 
   galaxy_tags:
     - prerequisite
