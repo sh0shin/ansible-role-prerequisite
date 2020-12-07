@@ -1,7 +1,7 @@
 ---
 
 # enabled
-prerequisite_enabled: yes
+prerequisite_enabled: no
 
 # mode/owner/group/backup defaults
 prerequisite_file_mode: "0444"
