@@ -14,13 +14,16 @@ prerequisite_backup: true
 prerequisite_skip:
   - "localhost"
 
+# become
+prerequisite_become: no
+
 # hosts file
 prerequisite_hosts_enabled: yes
 prerequisite_hosts_file: "/etc/hosts"
 
 prerequisite_hosts_dns_servers: [ 8.8.8.8 ]
-#prerequisite_hosts_ipv4_address: 
-#prerequisite_hosts_ipv6_address: 
+#prerequisite_hosts_ipv4_address:
+#prerequisite_hosts_ipv6_address:
 
 # wait for
 prerequisite_wait_enabled: yes

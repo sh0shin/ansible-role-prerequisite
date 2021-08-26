@@ -14,7 +14,7 @@
     line: "{{ prerequisite_hosts_ipv4_address }} {{ inventory_hostname }}"
     state: present
   delegate_to: localhost
-  become: yes
+  become: '{{ prerequisite_become }}'
   when: prerequisite_enabled
         and prerequisite_hosts_enabled
         and inventory_hostname not in prerequisite_skip
@@ -30,7 +30,7 @@
     line: "{{ prerequisite_hosts_ipv4_address }} {{ inventory_hostname }}"
     state: absent
   delegate_to: localhost
-  become: yes
+  become: '{{ prerequisite_become }}'
   when: prerequisite_enabled
         and prerequisite_hosts_enabled
         and inventory_hostname not in prerequisite_skip
@@ -46,7 +46,7 @@
     line: "{{ prerequisite_hosts_ipv6_address }} {{ inventory_hostname }}"
     state: present
   delegate_to: localhost
-  become: yes
+  become: '{{ prerequisite_become }}'
   when: prerequisite_enabled
         and prerequisite_hosts_enabled
         and inventory_hostname not in prerequisite_skip
@@ -62,7 +62,7 @@
     line: "{{ prerequisite_hosts_ipv6_address }} {{ inventory_hostname }}"
     state: absent
   delegate_to: localhost
-  become: yes
+  become: '{{ prerequisite_become }}'
   when: prerequisite_enabled
         and prerequisite_hosts_enabled
         and inventory_hostname not in prerequisite_skip
